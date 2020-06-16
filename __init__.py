@@ -19,7 +19,7 @@ gui_hooks.add_cards_did_init.append(init_add_card)
     
 def setupChoosers(self):
     # only differenc: use our ModelChooserino
-    self.modelChooser = ModelChooserino(self.mw, self.form.modelArea, self.form.horizontalLayout)
+    self.modelChooser = ModelChooserino(self, self.mw, self.form.modelArea, self.form.horizontalLayout)
     self.deckChooser = DeckChooser(self.mw, self.form.deckArea)
 
 

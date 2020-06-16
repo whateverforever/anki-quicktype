@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright: Ankitects Pty Ltd and contributors
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+import re
 
 from anki.lang import _
 from aqt import gui_hooks
@@ -9,8 +10,12 @@ from aqt.utils import shortcut, showInfo, showWarning
 from aqt import mw
 config = mw.addonManager.getConfig(__name__)
 
+RE_BTN = re.compile(r"\(\d+\)\s(.+)")
+
 class ModelChooserino(QHBoxLayout):
-    def __init__(self, mw, widget: QWidget, layout: QBoxLayout, label=True) -> None:
+    def __init__(self, addcards, mw, widget: QWidget, layout: QBoxLayout, label=True) -> None:
+        self.parent = addcards
+        
         QHBoxLayout.__init__(self)
         self.radioButtons = []
         self.radioButtonForName = {}
@@ -32,7 +37,7 @@ class ModelChooserino(QHBoxLayout):
             self.addWidget(self.modelLabel)
 
         for imodel, modelName in enumerate(config["displayedCardTypes"]):
-            button = QRadioButton(modelName)
+            button = QRadioButton("({}) {}".format(imodel+1, modelName))
             self.addWidget(button, alignment=Qt.AlignLeft)
             self.radioButtons.append(button)
             self.radioButtonForName[modelName] = button
@@ -66,7 +71,8 @@ class ModelChooserino(QHBoxLayout):
             button = self.radioButtons[radio_btn_idx]
 
         button.setChecked(True)
-        modelName = button.text()
+        buttonLabel = button.text()
+        modelName = RE_BTN.match(buttonLabel).group(1)
         current = self.deck.models.current()["name"]
 
         m = self.deck.models.byName(modelName)
@@ -84,6 +90,8 @@ class ModelChooserino(QHBoxLayout):
         cdeck["mid"] = m["id"]
         self.deck.decks.save(cdeck)
         gui_hooks.current_note_type_did_change(current)
+        self.parent.onModelChange()
+        self.parent.setAndFocusNote(self.parent.editor.note)
         self.mw.reset()
 
     def cleanup(self) -> None:
