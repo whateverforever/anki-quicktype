@@ -24,12 +24,10 @@ class ModelChooserino(ModelChooser):
         self.radioButtonForName = {}
 
         layout.setDirection(QBoxLayout.BottomToTop)
-        self.radioLayout = QHBoxLayout()
-        self.radioLayout.setAlignment(Qt.AlignLeft)
-        layout.setAlignment(self.radioLayout, Qt.AlignLeft)
-
-        self.addLayout(self.radioLayout)
         widget.setMinimumHeight(30)
+
+        self.radioLayout = QHBoxLayout()
+        self.addLayout(self.radioLayout)
         self.setupRadioBtns()
 
     def setupRadioBtns(self):
@@ -45,7 +43,7 @@ class ModelChooserino(ModelChooser):
             shortcut_text = "Ctrl+{}".format(imodel + 1)
             button.setShortcut(QKeySequence(shortcut_text))
             button.setToolTip(shortcut("Select Note Type ({})".format(shortcut_text)))
-            
+
         self.updateSelectedRadioBtn()
 
     def onDeckRadioClicked(self):
@@ -76,9 +74,10 @@ class ModelChooserino(ModelChooser):
         cdeck["mid"] = model["id"]
         self.deck.decks.save(cdeck)
         gui_hooks.current_note_type_did_change(current)
+        # Let AddCards redraw the fields of this note type
         self.parent.onModelChange()
-        self.parent.setAndFocusNote(self.parent.editor.note)
-        self.mw.reset()
+        # Let the parent refresh text on model selector button
+        self.updateModels()
 
     def updateModels(self):
         super().updateModels()
