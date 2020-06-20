@@ -89,7 +89,7 @@ class ModelChooserino(ModelChooser):
         gui_hooks.state_did_reset.remove(self.onReset)
 
     def onReset(self):
-        self.updateModels2()
+        self.updateSelectedRadioBtn()
 
     def show(self):
         self.widget.show()
@@ -135,7 +135,7 @@ class ModelChooserino(ModelChooser):
         gui_hooks.current_note_type_did_change(current)
         self.mw.reset()
 
-    def updateModels2(self):
+    def updateSelectedRadioBtn(self):
         currentModelName = self.deck.models.current()["name"]
 
         #self.models.setText(currentModelName)
