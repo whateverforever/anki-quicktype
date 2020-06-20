@@ -25,8 +25,9 @@ class ModelChooserino(ModelChooser):
 
         layout.setDirection(QBoxLayout.BottomToTop)
         widget.setMinimumHeight(30)
-
+        
         self.radioLayout = QHBoxLayout()
+
         self.addLayout(self.radioLayout)
         self.setupRadioBtns()
 
