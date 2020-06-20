@@ -12,8 +12,7 @@ from aqt.utils import shortcut, showInfo, showWarning
 from aqt import mw
 from aqt.modelchooser import ModelChooser
 
-config = mw.addonManager.getConfig(__name__)
-
+CONFIG = mw.addonManager.getConfig(__name__)
 RE_BTN = re.compile(r"\(\d+\)\s(.+)")
 
 class ModelChooserino(ModelChooser):
@@ -34,7 +33,7 @@ class ModelChooserino(ModelChooser):
         self.setupRadioBtns()
 
     def setupRadioBtns(self):
-        for imodel, modelName in enumerate(config["displayedCardTypes"]):
+        for imodel, modelName in enumerate(CONFIG["displayedCardTypes"]):
             button = QRadioButton("({}) {}".format(imodel+1, modelName))
 
             self.radioLayout.addWidget(button, alignment=Qt.AlignLeft)
@@ -69,7 +68,7 @@ class ModelChooserino(ModelChooser):
         if model is None:
             # then we have a note type added in the config that doesn't exist
             showWarning("The note type '{}' has been set in the config, but doesn't actually exist.\n"
-                        "Please adapt the config for existing note types.".format(modelName))
+                        "Please adapt the addon config for existing note types.".format(modelName))
             button.setChecked(False)
             self.mw.reset()
             return
@@ -98,5 +97,6 @@ class ModelChooserino(ModelChooser):
         if currentModelName in self.radioButtonForName:
             self.radioButtonForName[currentModelName].setChecked(True)
         else:
-            pass
-            #TODO current card type not in radiobuttons
+            # TODO: No radio button for this choice. What makes sense to do here?
+            for button in self.radioButtons:
+                button.setChecked(False)
