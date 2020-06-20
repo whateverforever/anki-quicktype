@@ -13,17 +13,11 @@ from aqt.sound import av_player
 
 def init_add_card(addCards):
     gui_hooks.current_note_type_did_change.remove(addCards.onModelChange)
-    gui_hooks.state_did_reset.remove(addCards.onReset)
 
 gui_hooks.add_cards_did_init.append(init_add_card)
     
 def setupChoosers(self):
-    # only differenc: use our ModelChooserino
     self.modelChooser = ModelChooserino(self, self.mw, self.form.modelArea, self.form.horizontalLayout)
     self.deckChooser = DeckChooser(self.mw, self.form.deckArea)
 
-
 AddCards.setupChoosers = setupChoosers
-
-# The window opener contains information about the class, and not its adress. Thus it must be updated.
-dialogs._dialogs["AddCards"][0] = AddCards

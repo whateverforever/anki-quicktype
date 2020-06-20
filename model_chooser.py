@@ -45,9 +45,7 @@ class ModelChooserino(ModelChooser):
             shortcut_text = "Ctrl+{}".format(imodel + 1)
             button.setShortcut(QKeySequence(shortcut_text))
             button.setToolTip(shortcut("Select Note Type ({})".format(shortcut_text)))
-
-        # models box
-        self.models.setText("...")
+            
         self.updateSelectedRadioBtn()
 
     def onDeckRadioClicked(self):
@@ -98,5 +96,4 @@ class ModelChooserino(ModelChooser):
             self.radioButtonForName[currentModelName].setChecked(True)
         else:
             # TODO: No radio button for this choice. What makes sense to do here?
-            for button in self.radioButtons:
-                button.setChecked(False)
+            pass
