@@ -2,21 +2,22 @@
 # Copyright: Ankitects Pty Ltd and contributors
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 import re
-
 from typing import Union
 
 from anki.lang import _
-from aqt import gui_hooks
+from aqt import gui_hooks, mw
+from aqt.modelchooser import ModelChooser
 from aqt.qt import *
 from aqt.utils import shortcut, showInfo, showWarning
-from aqt import mw
-from aqt.modelchooser import ModelChooser
 
 CONFIG = mw.addonManager.getConfig(__name__)
 RE_BTN = re.compile(r"\(\d+\)\s(.+)")
 
+
 class ModelChooserino(ModelChooser):
-    def __init__(self, addcards, mw, widget: QWidget, layout: QBoxLayout, label=True) -> None:
+    def __init__(
+        self, addcards, mw, widget: QWidget, layout: QBoxLayout, label=True
+    ) -> None:
         super().__init__(mw, widget, label=label)
 
         self.parent = addcards
@@ -25,7 +26,7 @@ class ModelChooserino(ModelChooser):
 
         layout.setDirection(QBoxLayout.BottomToTop)
         widget.setMinimumHeight(30)
-        
+
         self.radioLayout = QHBoxLayout()
 
         self.addLayout(self.radioLayout)
@@ -33,7 +34,7 @@ class ModelChooserino(ModelChooser):
 
     def setupRadioBtns(self):
         for imodel, modelName in enumerate(CONFIG["displayedCardTypes"]):
-            button = QRadioButton("({}) {}".format(imodel+1, modelName))
+            button = QRadioButton("({}) {}".format(imodel + 1, modelName))
 
             self.radioLayout.addWidget(button, alignment=Qt.AlignLeft)
             self.radioButtons.append(button)
@@ -64,8 +65,12 @@ class ModelChooserino(ModelChooser):
 
         if model is None:
             # then we have a note type added in the config that doesn't exist
-            showWarning("The note type '{}' has been set in the config, but doesn't actually exist.\n"
-                        "Please adapt the addon config for existing note types.".format(modelName))
+            showWarning(
+                "The note type '{}' has been set in the config, but doesn't actually exist.\n"
+                "Please adapt the addon config for existing note types.".format(
+                    modelName
+                )
+            )
             button.setChecked(False)
             self.mw.reset()
             return
