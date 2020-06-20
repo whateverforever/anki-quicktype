@@ -3,6 +3,8 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 import re
 
+from typing import Union
+
 from anki.lang import _
 from aqt import gui_hooks
 from aqt.qt import *
@@ -81,60 +83,18 @@ class ModelChooserino(ModelChooser):
         self.parent.setAndFocusNote(self.parent.editor.note)
         self.mw.reset()
 
-    def cleanup(self) -> None:
-        gui_hooks.state_did_reset.remove(self.onReset)
+    def updateModels(self):
+        super().updateModels()
 
-    def onReset(self):
-        self.updateSelectedRadioBtn()
-
-    def show(self):
-        self.widget.show()
-
-    def hide(self):
-        self.widget.hide()
-
-    def onEdit(self):
-        import aqt.models
-
-        aqt.models.Models(self.mw, self.widget)
-
-    def onModelChange(self) -> None:
-        from aqt.studydeck import StudyDeck
-
-        current = self.deck.models.current()["name"]
-        # edit button
-        edit = QPushButton(_("Manage"), clicked=self.onEdit)  # type: ignore
-
-        def nameFunc():
-            return sorted(self.deck.models.allNames())
-
-        ret = StudyDeck(
-            self.mw,
-            names=nameFunc,
-            accept=_("Choose"),
-            title=_("Choose Note Type"),
-            help="_notes",
-            current=current,
-            parent=self.widget,
-            buttons=[edit],
-            cancel=True,
-            geomKey="selectModel",
-        )
-        if not ret.name:
-            return
-
-        model = self.deck.models.byName(ret.name)
-        self.deck.conf["curModel"] = model["id"]
-        cdeck = self.deck.decks.current()
-        cdeck["mid"] = model["id"]
-        self.deck.decks.save(cdeck)
-        gui_hooks.current_note_type_did_change(current)
-        self.mw.reset()
+        # If we're still in the super() constructor, this is not yet available
+        if hasattr(self, "radioButtonForName"):
+            self.updateSelectedRadioBtn()
+            self.parent.onModelChange()
+            self.parent.setAndFocusNote(self.parent.editor.note)
 
     def updateSelectedRadioBtn(self):
         currentModelName = self.deck.models.current()["name"]
 
-        #self.models.setText(currentModelName)
         if currentModelName in self.radioButtonForName:
             self.radioButtonForName[currentModelName].setChecked(True)
         else:
