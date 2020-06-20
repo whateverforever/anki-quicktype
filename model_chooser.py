@@ -8,15 +8,17 @@ from aqt import gui_hooks
 from aqt.qt import *
 from aqt.utils import shortcut, showInfo, showWarning
 from aqt import mw
+from aqt.modelchooser import ModelChooser
+
 config = mw.addonManager.getConfig(__name__)
 
 RE_BTN = re.compile(r"\(\d+\)\s(.+)")
 
-class ModelChooserino(QHBoxLayout):
-    def __init__(self, addcards, mw, modelArea: QWidget, layout: QBoxLayout, label=True) -> None:
-        self.parent = addcards
+class ModelChooserino(ModelChooser):
+    def __init__(self, addcards, mw, widget: QWidget, layout: QBoxLayout, label=True) -> None:
+        super().__init__(mw, widget, label=label)
 
-        QHBoxLayout.__init__(self)
+        self.parent = addcards
         self.radioButtons = []
         self.radioButtonForName = {}
 
@@ -26,19 +28,10 @@ class ModelChooserino(QHBoxLayout):
         layout.setAlignment(self.radioLayout, Qt.AlignLeft)
 
         self.addLayout(self.radioLayout)
-        modelArea.setMinimumHeight(30)
+        widget.setMinimumHeight(30)
+        self.setupModels2()
 
-        self.modelArea = modelArea
-        self.mw = mw
-        self.deck = mw.col
-        self.label = label
-        self.setContentsMargins(0, 0, 0, 0)
-        self.setSpacing(8)
-        self.setupModels()
-        gui_hooks.state_did_reset.append(self.onReset)
-        self.modelArea.setLayout(self)  # type: ignore
-
-    def setupModels(self):
+    def setupModels2(self):
         if self.label:
             self.modelLabel = QLabel(_("Type"))
             self.radioLayout.addWidget(self.modelLabel)
@@ -57,18 +50,19 @@ class ModelChooserino(QHBoxLayout):
             button.setToolTip(shortcut("Select Note Type ({})".format(shortcut_text)))
 
         # models box
-        self.modelsBtn = QPushButton("...")
-        self.modelsBtn.setToolTip(shortcut(_("Change Note Type (Ctrl+N)")))
-        s = QShortcut(QKeySequence("Ctrl+N"), self.modelArea, activated=self.onModelChange)
-        self.modelsBtn.setAutoDefault(False)
-        self.addWidget(self.modelsBtn, alignment=Qt.AlignRight)
-        qconnect(self.modelsBtn.clicked, self.onModelChange)
-        a = QPushButton()
-        a.setSizePolicy(QSizePolicy.Policy(QSizePolicy.ShrinkFlag), QSizePolicy.Policy(QSizePolicy.ShrinkFlag))
+        self.models.setText("...")
+        #self.models = QPushButton("...")
+        #self.models.setToolTip(shortcut(_("Change Note Type (Ctrl+N)")))
+        #s = QShortcut(QKeySequence("Ctrl+N"), self.widget, activated=self.onModelChange)
+        #self.models.setAutoDefault(False)
+        #self.addWidget(self.models, alignment=Qt.AlignRight)
+        #qconnect(self.models.clicked, self.onModelChange)
+        #a = QPushButton()
+        #a.setSizePolicy(QSizePolicy.Policy(QSizePolicy.ShrinkFlag), QSizePolicy.Policy(QSizePolicy.ShrinkFlag))
         # layout
         #sizePolicy = QSizePolicy(QSizePolicy.Policy(7), QSizePolicy.Policy(0))
-        #self.modelsBtn.setSizePolicy(sizePolicy)
-        self.updateModels()
+        #self.models.setSizePolicy(sizePolicy)
+        self.updateModels2()
 
     def onDeckRadioClicked(self):
         sender: Union[QRadioButton, QShortcut] = QObject.sender(self)
@@ -106,18 +100,18 @@ class ModelChooserino(QHBoxLayout):
         gui_hooks.state_did_reset.remove(self.onReset)
 
     def onReset(self):
-        self.updateModels()
+        self.updateModels2()
 
     def show(self):
-        self.modelArea.show()
+        self.widget.show()
 
     def hide(self):
-        self.modelArea.hide()
+        self.widget.hide()
 
     def onEdit(self):
         import aqt.models
 
-        aqt.models.Models(self.mw, self.modelArea)
+        aqt.models.Models(self.mw, self.widget)
 
     def onModelChange(self) -> None:
         from aqt.studydeck import StudyDeck
@@ -136,7 +130,7 @@ class ModelChooserino(QHBoxLayout):
             title=_("Choose Note Type"),
             help="_notes",
             current=current,
-            parent=self.modelArea,
+            parent=self.widget,
             buttons=[edit],
             cancel=True,
             geomKey="selectModel",
@@ -152,10 +146,10 @@ class ModelChooserino(QHBoxLayout):
         gui_hooks.current_note_type_did_change(current)
         self.mw.reset()
 
-    def updateModels(self):
+    def updateModels2(self):
         currentModelName = self.deck.models.current()["name"]
 
-        #self.modelsBtn.setText(currentModelName)
+        #self.models.setText(currentModelName)
         if currentModelName in self.radioButtonForName:
             self.radioButtonForName[currentModelName].setChecked(True)
         else:
