@@ -29,13 +29,9 @@ class ModelChooserino(ModelChooser):
 
         self.addLayout(self.radioLayout)
         widget.setMinimumHeight(30)
-        self.setupModels2()
+        self.setupRadioBtns()
 
-    def setupModels2(self):
-        if self.label:
-            self.modelLabel = QLabel(_("Type"))
-            self.radioLayout.addWidget(self.modelLabel)
-
+    def setupRadioBtns(self):
         for imodel, modelName in enumerate(config["displayedCardTypes"]):
             button = QRadioButton("({}) {}".format(imodel+1, modelName))
 
