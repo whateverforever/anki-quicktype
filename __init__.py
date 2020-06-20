@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+
 from aqt import gui_hooks
 from aqt.addcards import AddCards
 from aqt.deckchooser import DeckChooser
