@@ -51,18 +51,7 @@ class ModelChooserino(ModelChooser):
 
         # models box
         self.models.setText("...")
-        #self.models = QPushButton("...")
-        #self.models.setToolTip(shortcut(_("Change Note Type (Ctrl+N)")))
-        #s = QShortcut(QKeySequence("Ctrl+N"), self.widget, activated=self.onModelChange)
-        #self.models.setAutoDefault(False)
-        #self.addWidget(self.models, alignment=Qt.AlignRight)
-        #qconnect(self.models.clicked, self.onModelChange)
-        #a = QPushButton()
-        #a.setSizePolicy(QSizePolicy.Policy(QSizePolicy.ShrinkFlag), QSizePolicy.Policy(QSizePolicy.ShrinkFlag))
-        # layout
-        #sizePolicy = QSizePolicy(QSizePolicy.Policy(7), QSizePolicy.Policy(0))
-        #self.models.setSizePolicy(sizePolicy)
-        self.updateModels2()
+        self.updateSelectedRadioBtn()
 
     def onDeckRadioClicked(self):
         sender: Union[QRadioButton, QShortcut] = QObject.sender(self)
