@@ -2,3 +2,4 @@
 .vscode
 meta.json
 .mypy_cache
+build
