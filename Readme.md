@@ -4,6 +4,9 @@
 
 ![](screenshot.png)
 
+## Requirements
+
+Needs Anki version at least anki `2.1.26`
 
 Bootstrapped from [Arthur-Milchior/anki-keep-model-in-add-cards](https://github.com/Arthur-Milchior/anki-keep-model-in-add-cards) and original Anki codebase.
 
