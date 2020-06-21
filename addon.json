@@ -1,0 +1,15 @@
+{
+    "display_name": "Quick Type Selector",
+    "module_name": "quick_type",
+    "repo_name": "quick_type",
+    "ankiweb_id": "-1",
+    "author": "ThouYS",
+    "contact": "https://thousandyardstare.de",
+    "homepage": "https://github.com/whateverforever/anki-quicktype",
+    "copyright_start": 2020,
+    "tags": "shortcut keyboard note type selector numbers ctrl cmd",
+    "conflicts": [],
+    "targets": [
+        "anki21"
+    ]
+}
